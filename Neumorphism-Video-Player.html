@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+
+		<title>Neumorphism Audio Player</title>
+		<link href="fa/css/all.min.css" rel="stylesheet" type="text/css" />
+
+		<style>
+    
+    *{
+    
+    margin: 0;
+    padding: 0;
+    font-family: arial;
+    box-sizing: border-box;
+    
+    }
+    
+    :root{
+    
+    --bg: #f0f0f0;
+    
+    }
+    
+    body{
+    
+    background: var(--bg);
+    
+    }
+    
+    #container{
+    
+    height: 620px;
+    width: 800px;
+    background: var(--bg);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border-radius: 30px;
+    padding: 40px 50px;
+    box-shadow: 5px 5px 8px rgba(0,0,0,0.2),-7px -7px 10px rgba(255,255,255,1),0px 0px 10px 2px rgba(0,0,0,0.1);
+    
+    }
+    
+    #progress{
+    
+    -webkit-appearance: none;
+    width: 100%; 
+    height: 30px;
+    background: var(--bg);
+    margin-bottom: 0px;
+    border-radius: 20px;
+    box-shadow: inset 3px 3px 3px rgba(255,255,255,0.8),inset -3px -3px 3px rgba(0,0,0,0.2),5px 8px 20px rgba(0,0,0,0.1),0px 0px 1px rgba(0,0,0,0.2);
+    
+    }
+    
+    #progress::-webkit-slider-thumb{
+    
+    -webkit-appearance: none;
+    height: 30px;
+    width: 50px;
+    background: #555;
+    border-radius: 20px;
+    box-shadow: 2px 2px 3px rgba(0,0,0,0.1),-2px -2px 3px rgba(255,255,255,1);
+    
+    }
+    
+    #controls{
+    
+    overflow: hidden;
+    height: 130px;
+    width: 100%;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    transition: all 0.5s;
+    padding: 0px 5px;
+    
+    }
+    
+    button{
+    
+    height: 70px;
+    width: 70px;
+    font-size: 25px;
+    border-radius: 40px;
+    border: none;
+    outline: none;
+    background: var(--bg);
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2),-2px -2px 5px rgba(255,255,255,0.8),inset  2px 2px 5px rgba(0,0,0,0),inset -2px -2px 5px rgba(255,255,255,0);
+    color: #444;
+    line-height: 64px;
+    text-align: center;
+    border: 2px solid var(--bg);
+    transition: all 0.2s;
+    
+    }
+    
+    button:active{
+    
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2),-2px -2px 5px rgba(255,255,255,0.8),inset 2px 2px 5px rgba(0,0,0,0.2),inset -2px -2px 5px rgba(255,255,255,0.8);
+    
+    }
+    
+    #volume{
+    
+    -webkit-appearance: none;
+    width: 150px;
+    height: 15px;
+    background: #555;
+    border-radius: 10px;
+    box-shadow: inset 1px 1px 2px rgba(255,255,255,0.2),inset -1px -1px 3px rgba(0,0,0,0.2),5px 8px 15px rgba(0,0,0,0.1);
+    
+    }
+    
+    #volume::-webkit-slider-thumb{
+    
+    -webkit-appearance: none;
+    width: 7px;
+    height: 7px;
+    background: #555;
+    border-radius: 10px;
+    box-shadow: 0px 0px 0px 4px #fff;
+    
+    }
+    
+    #music{
+        
+     height: 380px;
+     width: 100%;
+     background: var(--bg);
+     border: 5px solid var(--bg);
+     box-shadow: 5px 5px 8px rgba(0,0,0,0.2), -7px -7px 10px rgba(255,255,255,1);
+     margin-bottom: 30px;
+     border-radius: 30px;
+     position: relative;
+     transition: all 0.5s;
+        
+    }
+    
+    #bigPlay{
+        
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%,-50%);
+     height: 160px;
+     width: 160px;
+     border-radius: 80px;
+     font-size: 70px;
+     text-align: center;
+     line-height: 160px;
+     background: radial-gradient(circle at center,rgba(255,255,255,0.6),rgba(255,255,255,0.2));
+     border: none;
+     display: none;
+     box-shadow: none;
+        
+    }
+    
+    #bigPlay:active{
+        
+     box-shadow: none;
+        
+    }
+    
+    #music:hover #bigPlay{
+        
+     display: block;
+        
+    }
+    
+    #bigScreen{
+        
+     position: absolute;
+     right: 5px;
+     bottom: 5px;
+     border-radius: 5px;
+     background: rgba(0,0,0,0.1);
+     border:  none;
+     box-shadow: none;
+     color: #aaa;
+     display: none;
+        
+    }
+    
+    #music:hover #bigScreen{
+        
+     display: block;
+        
+    }
+    
+    .makeBig{
+        
+     height: 100% !important;
+     width: 100% !important;
+        
+    }
+    
+    .makeHide{
+        
+      height: 0px !important;
+        
+    }
+    
+    #duration{
+        
+      height: 40px;
+      width: 240px;
+      background: rgba(0,0,0,0.2);
+      position: absolute;
+      left: 0px;
+      bottom: 0px;
+      color: #fff;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      line-height: 40px;
+      border-radius: 20px;
+        
+    }
+    
+    
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<div id="music">
+				<video poster="thumb.png" style="object-fit: cover;height: 100%;width: 100%;border-radius: 25px;" id="video">
+					<source src="Background.mp4"></source>
+				</video>
+				<button id="bigPlay" onclick="playPause();">
+					<i class="fas fa-play"></i>
+				</button>
+				<button id="bigScreen" onclick="landscap();">
+					<i class="fas fa-arrows-alt"></i>
+				</button>
+				<p id="duration">00:00:00 / 00:00:00</p>
+			</div>
+			<div id="controls">
+				<input id="progress" type="range" min="0" max="100" value="0" />
+
+				<button id="play" onclick="playPause();">
+					<i class="fas fa-play"></i>
+				</button>
+				<button id="backward" onclick="backward();">
+					<i class="fas fa-backward"></i>
+				</button>
+				<button id="forward" onclick="forward();">
+					<i class="fas fa-forward"></i>
+				</button>
+				<div style="height: 70px;width: 250px;box-shadow: none;display: flex;align-items: center;justify-content: space-between;flex-wrap: wrap;">
+					<input id="volume" type="range" value="5" min="1" max="10" />
+
+					<button id="mbtn" onclick="noSound()">
+						<i class="fas fa-volume-up"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+		<script>
+        
+        
+        /*play-pause*/
+    
+    function playPause(){
+    
+    if(video.paused){
+    
+    video.play();
+    play.innerHTML = '<i class="fas fa-pause"></i>';
+    bigPlay.innerHTML = '<i class="fas fa-pause"></i>';
+    
+    }
+    
+    else{
+    
+    video.pause();
+    play.innerHTML = '<i class="fas fa-play"></i>';
+    bigPlay.innerHTML = '<i class="fas fa-play"></i>';
+    
+    }
+    
+    video.volume = volume.value/10;
+    
+    }
+    
+    
+    
+    /*backward-forward*/
+    
+    function backward(){
+    
+    video.currentTime = video.currentTime-10;
+    
+    }
+    
+    function forward(){
+    
+    video.currentTime = video.currentTime+10;
+    
+    }
+    
+    
+    
+    /*muted-unmuted*/
+    
+    function noSound(){
+    
+    if(video.muted == 0){
+    
+    video.muted = 1;
+    mbtn.innerHTML = '<i class="fas fa-volume-off"></i>';
+    
+    }else{
+    
+    video.muted = 0;
+    mbtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+    
+    }
+    
+    }
+    
+    
+    
+    /*volume up-down*/
+   
+    volume.oninput = function(){
+    
+    video.volume = volume.value/10;
+    
+    }
+    
+    
+    
+    /*progress*/
+    
+    video.ontimeupdate = function(){
+    
+    x = 100/Math.floor(video.duration);
+    progress.value = video.currentTime*x;
+    
+    
+    var a = Math.floor(video.currentTime);
+    var restSec = a%60;
+    var c = a - restSec;
+    var minutes = c/60;
+    var restMin = minutes%60;
+    var f = minutes - restMin;
+    var hours = f/60;
+    
+    if(hours<10){
+        
+      hours = "0"+hours;
+        
+    }
+    
+    if(restMin<10){
+        
+      restMin = "0"+restMin;
+        
+    }
+    
+    if(restSec<10){
+        
+      restSec = "0"+restSec;
+        
+    }
+    
+    
+    var m = Math.floor(video.duration);
+    var d_restSec = m%60;
+    var n = m - d_restSec;
+    var d_minutes = n/60;
+    var d_restMin = d_minutes%60;
+    var o = d_minutes - d_restMin;
+    var d_hours = o/60;
+    
+    if(hours<10){
+        
+      d_hours = "0"+d_hours;
+        
+    }
+    
+    if(d_restMin<10){
+        
+      d_restMin = "0"+d_restMin;
+        
+    }
+    
+    if(d_restSec<10){
+        
+      d_restSec = "0"+d_restSec;
+        
+    }
+    
+    duration.innerHTML = hours+":"+restMin+":"+restSec+" / "+d_hours+":"+d_restMin+":"+d_restSec;
+    
+    };
+    
+    progress.onchange = function(){
+    
+    x = Math.floor(video.duration)/100;
+    video.currentTime = progress.value*x;
+    
+    }
+    
+    
+    
+    /*after playing*/
+    
+    video.onended = function(){
+    
+    video.currentTime = 0;
+    progress.value = 0;
+    video.pause();
+    play.innerHTML = '<i class="fas fa-play"></i>';
+    bigPlay.innerHTML = '<i class="fas fa-play"></i>';
+    
+    }
+    
+    function landscap(){
+        
+     music.classList.toggle("makeBig");
+     controls.classList.toggle("makeHide");
+        
+    }
+        
+    
+		</script>
+	</body>
+</html>
